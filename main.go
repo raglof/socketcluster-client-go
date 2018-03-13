@@ -1,40 +1,41 @@
 package main
 
 import (
-	"github.com/sacOO7/socketcluster-client-go/scclient"
-	"text/scanner"
-	"os"
 	"fmt"
 	_ "log"
+	"os"
+	"text/scanner"
+
+	"github.com/raglof/socketcluster-client-go/scclient"
 )
 
-func onConnect(client scclient.Client) {
+func onConnect(client *scclient.Client) {
 	fmt.Println("Connected to server")
 }
 
-func onDisconnect(client scclient.Client, err error) {
+func onDisconnect(client *scclient.Client, err error) {
 	fmt.Printf("Error: %s\n", err.Error())
 	os.Exit(1)
 }
 
-func onConnectError(client scclient.Client, err error) {
+func onConnectError(client *scclient.Client, err error) {
 	fmt.Printf("Error: %s\n", err.Error())
 	os.Exit(1)
 }
 
-func onSetAuthentication(client scclient.Client, token string) {
+func onSetAuthentication(client *scclient.Client, token string) {
 	fmt.Println("Auth token received :", token)
 
 }
 
-func onAuthentication(client scclient.Client, isAuthenticated bool) {
+func onAuthentication(client *scclient.Client, isAuthenticated bool) {
 	fmt.Println("Client authenticated :", isAuthenticated)
 	go start(client)
 }
 
 func main() {
 	var reader scanner.Scanner
-	client := scclient.New("ws://192.168.100.11:8000/socketcluster/");
+	client := scclient.New("ws://192.168.100.11:8000/socketcluster/")
 	client.SetBasicListener(onConnect, onConnectError, onDisconnect)
 	client.SetAuthenticationListener(onSetAuthentication, onAuthentication)
 	go client.Connect()
@@ -45,6 +46,6 @@ func main() {
 	// os.Exit(0)
 }
 
-func start(client scclient.Client) {
+func start(client *scclient.Client) {
 	// start writing your code from here
 }
